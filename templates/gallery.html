@@ -17,6 +17,12 @@
             </a>
         </div>
 
+        {% if request.args.get('deleted') %}
+        <div class="gallery-alert">
+            Reel deleted.
+        </div>
+        {% endif %}
+
         {% if reels %}
         <div class="gallery-grid">
             {% for reel in reels %}
@@ -32,16 +38,24 @@
                 </div>
                 <div class="reel-info">
                     <h2>{{ reel.title }}</h2>
-                    <p>{{ reel.media_count }} media item{% if reel.media_count != 1 %}s{% endif %} · {{ reel.duration }}s · {{ reel.song_name }}</p>
+                    <p>{{ reel.media_count }} media item{% if reel.media_count != 1 %}s{% endif %} &middot; {{ reel.duration }}s &middot; {{ reel.song_name }}</p>
                     {% if reel.caption %}
                     <p class="caption-preview">{{ reel.caption }}</p>
                     {% endif %}
                     <div class="reel-actions">
                         <span>{{ reel.created_at|friendly_date }}</span>
-                        <a href="{{ url_for('static', filename=reel.filename) }}" download>
-                            <i class="fas fa-download"></i>
-                            Download
-                        </a>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('static', filename=reel.filename) }}" download>
+                                <i class="fas fa-download"></i>
+                                Download
+                            </a>
+                            <form action="{{ url_for('delete_reel', reel_id=reel.id) }}" method="post" onsubmit="return confirm('Delete this reel? This cannot be undone.');">
+                                <button type="submit" class="delete-btn">
+                                    <i class="fas fa-trash"></i>
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </article>

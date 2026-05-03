@@ -46,6 +46,16 @@
     gap: 1.25rem;
 }
 
+.gallery-alert {
+    border: 1px solid #b9e8d9;
+    border-radius: 8px;
+    background: #ecfdf6;
+    color: #087457;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+}
+
 .reel-card {
     overflow: hidden;
     border: 1px solid #dbe3ee;
@@ -95,6 +105,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
+    flex-wrap: wrap;
     border-top: 1px solid #e1e8f1;
     color: #738196;
     font-size: 0.85rem;
@@ -102,17 +113,41 @@
     padding-top: 0.85rem;
 }
 
-.reel-actions a {
+.action-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons form {
+    margin: 0;
+}
+
+.reel-actions a,
+.delete-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    border: 0;
+    background: transparent;
     color: var(--primary-color);
+    font: inherit;
     font-weight: 800;
+    padding: 0;
     text-decoration: none;
 }
 
 .reel-actions a:hover {
     color: var(--secondary-color);
+}
+
+.delete-btn {
+    color: #c3342b;
+}
+
+.delete-btn:hover {
+    color: #8f1f18;
 }
 
 .empty-gallery {
@@ -156,6 +191,11 @@
     }
 
     .reel-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .action-buttons {
         align-items: flex-start;
         flex-direction: column;
     }

@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template, request, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
 from werkzeug.utils import secure_filename
 
 
@@ -57,6 +57,23 @@ def load_reels() -> list[dict]:
 def save_reels(reels: list[dict]) -> None:
     ensure_storage()
     REELS_INDEX.write_text(json.dumps(reels, indent=2), encoding="utf-8")
+
+
+def delete_static_file(filename: str | None) -> None:
+    if not filename:
+        return
+
+    path = (STATIC_DIR / filename).resolve()
+    try:
+        path.relative_to(STATIC_DIR.resolve())
+    except ValueError:
+        return
+
+    if path.is_file():
+        try:
+            path.unlink()
+        except OSError:
+            pass
 
 
 def list_songs() -> list[dict]:
@@ -194,6 +211,23 @@ def create_reel():
 @app.route("/gallery")
 def gallery():
     return render_template("gallery.html", reels=load_reels())
+
+
+@app.post("/reels/<reel_id>/delete")
+def delete_reel(reel_id: str):
+    reels = load_reels()
+    reel = next((item for item in reels if item.get("id") == reel_id), None)
+    if reel is None:
+        abort(404)
+
+    save_reels([item for item in reels if item.get("id") != reel_id])
+    delete_static_file(reel.get("filename"))
+    delete_static_file(reel.get("thumbnail"))
+
+    if request.accept_mimetypes.best == "application/json":
+        return jsonify({"message": "Reel deleted.", "id": reel_id})
+
+    return redirect(url_for("gallery", deleted=1))
 
 
 if __name__ == "__main__":
