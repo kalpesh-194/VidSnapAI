@@ -1,61 +1,99 @@
 {% extends "base.html" %}
 
-{% block title %}Create Reel - AI Reel Generator{% endblock %}
+{% block title %}Create Reel - VidSnapAI{% endblock %}
 
-{% block extra_css %} 
+{% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
 {% endblock %}
 
 {% block content %}
-<section class="upload-section">
+<section class="creator-section">
     <div class="container">
-        <div class="upload-container">
-            <h1 class="upload-title">Create Your Reel</h1>
-            <p class="upload-instructions">Upload your video files to create an amazing reel. You can upload multiple files.</p>
-            
-            <form action="/create" method="post" class="dropzone" id="myDropzone">
-                <div class="fallback">
-                    <div id="fileInputs">
-                        <div class="file-input-group">
-                            <input name="file1" type="file" class="file-input" />
-                            <button type="button" class="remove-file-btn" onclick="removeFileInput(this)" disabled>×</button>
+        <div class="creator-header">
+            <h1>Create Your Reel</h1>
+            <p>Add pictures or clips, choose music, and export a vertical reel.</p>
+        </div>
+
+        <form class="creator-shell" id="reelForm" enctype="multipart/form-data">
+            <div class="creator-grid">
+                <section class="creator-panel" aria-label="Reel settings">
+                    <div class="field-group">
+                        <label class="field-label" for="titleInput">Reel title</label>
+                        <input class="text-field" id="titleInput" name="title" type="text" maxlength="80" placeholder="My new reel">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="drop-area" for="mediaInput">
+                            <i class="fas fa-images"></i>
+                            <span>Choose pictures or clips</span>
+                            <small>JPG, PNG, WebP, MP4, or WebM</small>
+                        </label>
+                        <input class="visually-hidden" id="mediaInput" name="media" type="file" accept="image/*,video/*" multiple required>
+                        <div class="media-list empty" id="mediaList">No media selected yet.</div>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="field-group">
+                            <label class="field-label" for="durationInput">Seconds per picture</label>
+                            <input class="text-field" id="durationInput" name="image_duration" type="number" min="1" max="8" step="0.5" value="2.5">
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label" for="songSelect">Music</label>
+                            <select class="text-field" id="songSelect" name="song">
+                                <option value="">No music</option>
+                                {% for song in songs %}
+                                <option value="{{ url_for('static', filename=song.filename) }}">{{ song.label }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
-                    <button type="button" class="add-file-btn" onclick="addFileInput()">+ Add File</button>
-                </div>
-                
-                <div class="text-input-container">
-                    <textarea class="text-input" id="textInput" name="text" placeholder="Enter your text to be added as voice here..." rows="4"></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    Create Reel
-                </button>
-            </form>
-        </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="captionInput">Caption text</label>
+                        <textarea class="text-field caption-field" id="captionInput" name="caption" maxlength="160" rows="4" placeholder="Text shown on the reel"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-magic"></i>
+                        Create Reel
+                    </button>
+                </section>
+
+                <section class="preview-panel" aria-label="Reel preview">
+                    <div class="phone-frame">
+                        <div class="preview-placeholder" id="previewPlaceholder">
+                            <i class="fas fa-play"></i>
+                            <span>Your reel preview appears here</span>
+                        </div>
+                        <canvas class="reel-canvas" id="reelCanvas" width="720" height="1280" hidden></canvas>
+                        <video class="result-video" id="resultVideo" controls playsinline hidden></video>
+                    </div>
+
+                    <div class="progress-wrap" aria-live="polite">
+                        <div class="progress-label" id="statusText">Ready</div>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-actions" id="resultActions" hidden>
+                        <a class="secondary-btn" id="downloadLink" href="#" download>
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                        <a class="secondary-btn" id="galleryLink" href="{{ url_for('gallery') }}">
+                            <i class="fas fa-film"></i>
+                            Gallery
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </form>
     </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    let fileCounter = 2; // Start from 2 since we already have file1
-
-    function addFileInput() {
-        const fileInputs = document.getElementById('fileInputs');
-        const newFileInput = document.createElement('div');
-        newFileInput.className = 'file-input-group';
-        newFileInput.innerHTML = `
-            <input name="file${fileCounter}" type="file" class="file-input" />
-            <button type="button" class="remove-file-btn" onclick="removeFileInput(this)">×</button>
-        `;
-        fileInputs.appendChild(newFileInput);
-        fileCounter++;
-    }
-
-    function removeFileInput(button) {
-        const fileInputGroup = button.parentElement;
-        fileInputGroup.remove();
-    }
-</script>
-{% endblock %} 
+<script src="{{ url_for('static', filename='js/create.js') }}"></script>
+{% endblock %}

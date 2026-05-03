@@ -1,101 +1,162 @@
-.gallery-container {
-    padding: 2rem 0;
+.gallery-section {
+    min-height: 78vh;
+    padding: 3rem 0 4rem;
+    background: #f4f7fb;
 }
 
-.gallery-title {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #333;
-    font-weight: 600;
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-header h1 {
+    color: #162033;
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.create-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-weight: 800;
+    padding: 0 1rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.create-link:hover {
+    background: #174adb;
+    color: #ffffff;
+    transform: translateY(-1px);
 }
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
-}
-
-.gallery-item {
-    transition: transform 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: translateY(-5px);
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.25rem;
 }
 
 .reel-card {
-    background: white;
-    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dbe3ee;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 16px 34px rgba(32, 45, 64, 0.08);
 }
 
-.reel-thumbnail {
+.reel-video-wrap {
     position: relative;
-    width: 100%;
-    padding-top: 177.78%; /* 16:9 aspect ratio */
-    overflow: hidden;
+    background: #101418;
+    aspect-ratio: 9 / 16;
 }
 
-.reel-thumbnail img {
-    position: absolute;
-    top: 0;
-    left: 0;
+.reel-video-wrap video {
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: cover;
-}
-
-.play-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.play-overlay i {
-    color: white;
-    font-size: 3rem;
-}
-
-.reel-thumbnail:hover .play-overlay {
-    opacity: 1;
 }
 
 .reel-info {
     padding: 1rem;
 }
 
-.reel-info h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #333;
+.reel-info h2 {
+    color: #172033;
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 0.45rem;
 }
 
 .reel-info p {
-    margin: 0.5rem 0 0;
-    color: #666;
-    font-size: 0.9rem;
+    color: #647286;
+    font-size: 0.92rem;
+    margin: 0;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
+.caption-preview {
+    margin-top: 0.65rem !important;
+    color: #39465a !important;
+}
+
+.reel-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    border-top: 1px solid #e1e8f1;
+    color: #738196;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+}
+
+.reel-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--primary-color);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.reel-actions a:hover {
+    color: var(--secondary-color);
+}
+
+.empty-gallery {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    max-width: 520px;
+    margin: 5rem auto 0;
+    border: 1px dashed #9bb1ca;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #5b687a;
+    padding: 2rem;
+    text-align: center;
+}
+
+.empty-gallery i {
+    color: var(--secondary-color);
+    font-size: 2.4rem;
+}
+
+.empty-gallery h2 {
+    color: #172033;
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.empty-gallery p {
+    margin: 0;
+}
+
+@media (max-width: 620px) {
+    .gallery-header {
+        align-items: stretch;
+        flex-direction: column;
     }
-}
 
-@media (max-width: 480px) {
     .gallery-grid {
         grid-template-columns: 1fr;
     }
-} 
+
+    .reel-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

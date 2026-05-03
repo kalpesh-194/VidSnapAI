@@ -1,58 +1,60 @@
 {% extends "base.html" %}
 
-{% block title %}Gallery - AI Reel Generator{% endblock %}
+{% block title %}Gallery - VidSnapAI{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="container gallery-container">
-    <h1 class="gallery-title">Reel Gallery</h1>
-    <div class="gallery-grid">
-        <!-- Example reels - these would be populated dynamically in a real application -->
-        <div class="gallery-item">
-            <div class="reel-card">
-                <div class="reel-thumbnail">
-                    <img src="{{ url_for('static', filename='1.jpg') }}" alt="Reel thumbnail">
-                    <div class="play-overlay">
-                        <i class="fas fa-play"></i>
-                    </div>
+<section class="gallery-section">
+    <div class="container">
+        <div class="gallery-header">
+            <h1>Reel Gallery</h1>
+            <a class="create-link" href="{{ url_for('create') }}">
+                <i class="fas fa-plus"></i>
+                New Reel
+            </a>
+        </div>
+
+        {% if reels %}
+        <div class="gallery-grid">
+            {% for reel in reels %}
+            <article class="reel-card">
+                <div class="reel-video-wrap">
+                    <video
+                        src="{{ url_for('static', filename=reel.filename) }}"
+                        {% if reel.thumbnail %}poster="{{ url_for('static', filename=reel.thumbnail) }}"{% endif %}
+                        controls
+                        playsinline
+                        preload="metadata">
+                    </video>
                 </div>
                 <div class="reel-info">
-                    <h3>Summer Vibes</h3>
-                    <p>Created by: User123</p>
-                </div>
-            </div>
-        </div>
-        <div class="gallery-item">
-            <div class="reel-card">
-                <div class="reel-thumbnail">
-                    <img src="{{ url_for('static', filename='2.jpg') }}" alt="Reel thumbnail">
-                    <div class="play-overlay">
-                        <i class="fas fa-play"></i>
+                    <h2>{{ reel.title }}</h2>
+                    <p>{{ reel.media_count }} media item{% if reel.media_count != 1 %}s{% endif %} · {{ reel.duration }}s · {{ reel.song_name }}</p>
+                    {% if reel.caption %}
+                    <p class="caption-preview">{{ reel.caption }}</p>
+                    {% endif %}
+                    <div class="reel-actions">
+                        <span>{{ reel.created_at|friendly_date }}</span>
+                        <a href="{{ url_for('static', filename=reel.filename) }}" download>
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
                     </div>
                 </div>
-                <div class="reel-info">
-                    <h3>City Lights</h3>
-                    <p>Created by: Creator456</p>
-                </div>
-            </div>
+            </article>
+            {% endfor %}
         </div>
-        <div class="gallery-item">
-            <div class="reel-card">
-                <div class="reel-thumbnail">
-                    <img src="{{ url_for('static', filename='3.jpg') }}" alt="Reel thumbnail">
-                    <div class="play-overlay">
-                        <i class="fas fa-play"></i>
-                    </div>
-                </div>
-                <div class="reel-info">
-                    <h3>Nature's Beauty</h3>
-                    <p>Created by: NatureLover</p>
-                </div>
-            </div>
+        {% else %}
+        <div class="empty-gallery">
+            <i class="fas fa-film"></i>
+            <h2>No reels yet</h2>
+            <p>Create your first reel from pictures or clips.</p>
+            <a class="create-link" href="{{ url_for('create') }}">Create Reel</a>
         </div>
+        {% endif %}
     </div>
-</div>
-{% endblock %} 
+</section>
+{% endblock %}
